@@ -4,7 +4,7 @@ variable "network_prefix" {
     default = "app"
 }
 
-variable "server_name {
+variable "server_name" {
     type = string
     default = "web"
 }
