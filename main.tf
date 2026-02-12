@@ -1,14 +1,14 @@
 
 resource "google_compute_network" "app_net" {
-  name                    = "app-net"
+  name                    = "${var.network_prefix}-net"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "app_sub" {
-  name          = "app-sub"
+  name          = "${var.network_prefix}-sub"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-west1"
-  network       = google_compute_network.app_net.id
+  network       = google_compute_network.app_net.name
 }
 
 data "google_compute_image" "ubuntu" {
@@ -18,7 +18,7 @@ data "google_compute_image" "ubuntu" {
 }
 
 resource "google_compute_instance" "web" {
-  name         = "web"
+  name         = var.server_name
   machine_type = "e2-micro"
   boot_disk {
     initialize_params {
@@ -26,7 +26,7 @@ resource "google_compute_instance" "web" {
     }
   }
   network_interface {
-   subnetwork = "app-sub"
+   subnetwork = google_compute_subnetwork.app_sub.name
    access_config {
       # Leave empty for dynamic public IP
     }
